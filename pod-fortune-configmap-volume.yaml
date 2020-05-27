@@ -1,0 +1,285 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2020-05-27T12:52:38Z"
+  managedFields:
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:spec:
+          f:containers:
+            k:{"name":"html-generator"}:
+              .: {}
+              f:env:
+                .: {}
+                k:{"name":"INTERVAL"}:
+                  .: {}
+                  f:name: {}
+                  f:valueFrom:
+                    .: {}
+                    f:configMapKeyRef:
+                      .: {}
+                      f:key: {}
+                      f:name: {}
+              f:image: {}
+              f:imagePullPolicy: {}
+              f:name: {}
+              f:resources:
+                .: {}
+                f:limits:
+                  .: {}
+                  f:cpu: {}
+                  f:memory: {}
+                f:requests:
+                  .: {}
+                  f:cpu: {}
+                  f:memory: {}
+              f:terminationMessagePath: {}
+              f:terminationMessagePolicy: {}
+              f:volumeMounts:
+                .: {}
+                k:{"mountPath":"/var/htdocs"}:
+                  .: {}
+                  f:mountPath: {}
+                  f:name: {}
+            k:{"name":"web-server"}:
+              .: {}
+              f:image: {}
+              f:imagePullPolicy: {}
+              f:name: {}
+              f:ports:
+                .: {}
+                k:{"containerPort":80,"protocol":"TCP"}:
+                  .: {}
+                  f:containerPort: {}
+                  f:protocol: {}
+              f:resources:
+                .: {}
+                f:limits:
+                  .: {}
+                  f:cpu: {}
+                  f:memory: {}
+                f:requests:
+                  .: {}
+                  f:cpu: {}
+                  f:memory: {}
+              f:terminationMessagePath: {}
+              f:terminationMessagePolicy: {}
+              f:volumeMounts:
+                .: {}
+                k:{"mountPath":"/etc/nginx/conf.d"}:
+                  .: {}
+                  f:mountPath: {}
+                  f:name: {}
+                  f:readOnly: {}
+                k:{"mountPath":"/usr/share/nginx/html"}:
+                  .: {}
+                  f:mountPath: {}
+                  f:name: {}
+                  f:readOnly: {}
+          f:dnsPolicy: {}
+          f:enableServiceLinks: {}
+          f:restartPolicy: {}
+          f:schedulerName: {}
+          f:securityContext: {}
+          f:terminationGracePeriodSeconds: {}
+          f:volumes:
+            .: {}
+            k:{"name":"config"}:
+              .: {}
+              f:configMap:
+                .: {}
+                f:defaultMode: {}
+                f:name: {}
+              f:name: {}
+            k:{"name":"html"}:
+              .: {}
+              f:emptyDir: {}
+              f:name: {}
+      manager: kubectl
+      operation: Update
+      time: "2020-05-27T12:52:38Z"
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:status:
+          f:conditions:
+            k:{"type":"ContainersReady"}:
+              .: {}
+              f:lastProbeTime: {}
+              f:lastTransitionTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Initialized"}:
+              .: {}
+              f:lastProbeTime: {}
+              f:lastTransitionTime: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Ready"}:
+              .: {}
+              f:lastProbeTime: {}
+              f:lastTransitionTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:containerStatuses: {}
+          f:hostIP: {}
+          f:podIP: {}
+          f:podIPs:
+            .: {}
+            k:{"ip":"10.1.95.17"}:
+              .: {}
+              f:ip: {}
+          f:startTime: {}
+      manager: kubelet
+      operation: Update
+      time: "2020-05-27T12:55:15Z"
+  name: fortune-configmap-volume
+  namespace: default
+  resourceVersion: "26568"
+  selfLink: /api/v1/namespaces/default/pods/fortune-configmap-volume
+  uid: 7fbf2b72-5c88-40eb-a618-5578362bf342
+spec:
+  containers:
+    - env:
+        - name: INTERVAL
+          valueFrom:
+            configMapKeyRef:
+              key: sleep-interval
+              name: fortune-config
+      image: akruglov/fortune:env
+      imagePullPolicy: Always
+      name: html-generator
+      resources:
+        limits:
+          cpu: 500m
+          memory: 128Mi
+        requests:
+          cpu: 500m
+          memory: 128Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+        - mountPath: /var/htdocs
+          name: html
+        - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          name: default-token-ss8w4
+          readOnly: true
+    - image: nginx:alpine
+      imagePullPolicy: IfNotPresent
+      name: web-server
+      ports:
+        - containerPort: 80
+          protocol: TCP
+      resources:
+        limits:
+          cpu: 500m
+          memory: 128Mi
+        requests:
+          cpu: 500m
+          memory: 128Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: html
+          readOnly: true
+        - mountPath: /etc/nginx/conf.d
+          name: config
+          readOnly: true
+        - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          name: default-token-ss8w4
+          readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: akruglov-dev
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+  volumes:
+    - emptyDir: {}
+      name: html
+    - configMap:
+        defaultMode: 420
+        name: fortune-config
+      name: config
+    - name: default-token-ss8w4
+      secret:
+        defaultMode: 420
+        secretName: default-token-ss8w4
+status:
+  conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2020-05-27T12:52:40Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2020-05-27T12:52:40Z"
+      message: "containers with unready status: [html-generator web-server]"
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2020-05-27T12:52:40Z"
+      message: "containers with unready status: [html-generator web-server]"
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2020-05-27T12:52:39Z"
+      status: "True"
+      type: PodScheduled
+  containerStatuses:
+    - image: akruglov/fortune-env
+      imageID: ""
+      lastState: {}
+      name: html-generator
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        waiting:
+          message: Back-off pulling image "akruglov/fortune-env"
+          reason: ImagePullBackOff
+    - containerID: containerd://33ebf2b17f139e788fae7b86bae0eb3947f2c6c459fdd0541baef572c0163f88
+      image: docker.io/library/nginx:alpine
+      imageID: docker.io/library/nginx@sha256:763e7f0188e378fef0c761854552c70bbd817555dc4de029681a2e972e25e30e
+      lastState:
+        terminated:
+          containerID: containerd://33ebf2b17f139e788fae7b86bae0eb3947f2c6c459fdd0541baef572c0163f88
+          exitCode: 1
+          finishedAt: "2020-05-27T12:54:59Z"
+          reason: Error
+          startedAt: "2020-05-27T12:54:59Z"
+      name: web-server
+      ready: false
+      restartCount: 4
+      started: false
+      state:
+        waiting:
+          message: back-off 1m20s restarting failed container=web-server pod=fortune-configmap-volume_default(7fbf2b72-5c88-40eb-a618-5578362bf342)
+          reason: CrashLoopBackOff
+  hostIP: 192.168.11.113
+  phase: Pending
+  podIP: 10.1.95.17
+  podIPs:
+    - ip: 10.1.95.17
+  qosClass: Guaranteed
+  startTime: "2020-05-27T12:52:40Z"

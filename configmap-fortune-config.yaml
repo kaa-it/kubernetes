@@ -1,0 +1,40 @@
+apiVersion: v1
+data:
+  my-nginx-config.conf: |-
+    server {
+      listen 80;
+      listen 443 ssl;
+      server_name www.kubia-example.com;
+      ssl_certificate certs/https.cert;
+      ssl_certificate_key certs/https.key;
+      ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+      ssl_ciphers HIGH:!aNULL:!MD5;
+
+      gzip on;
+      gzip_types text/plain application/xml;
+
+      location / {
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+      }
+    }
+  sleep-interval: "25"
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2020-05-27T13:07:38Z"
+  managedFields:
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:data:
+          .: {}
+          f:my-nginx-config.conf: {}
+          f:sleep-interval: {}
+      manager: kubectl
+      operation: Update
+      time: "2020-05-27T13:07:38Z"
+  name: fortune-config
+  namespace: default
+  resourceVersion: "28319"
+  selfLink: /api/v1/namespaces/default/configmaps/fortune-config
+  uid: 775a4903-355e-472a-85f2-83e41eb80cb6

@@ -1,0 +1,3 @@
+kubectl create configmap fortune-config --from-literal=sleep-interval=25
+kubectl create configmap fortune-config --from-file=configmap-files
+kubectl create secret generic fortune-https --from-file=https.key --from-file=https.cert --from-file=foo
